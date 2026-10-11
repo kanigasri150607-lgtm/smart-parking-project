@@ -1,11 +1,16 @@
-
+```jsx
 import { useState } from "react";
 import "./App.css";
 
+const API_URL = "https://smart-parking-backend-osys.onrender.com";
+
 function formatDate(date) {
   if (!date) return "";
+
   const parts = date.split("-");
+
   if (parts.length !== 3) return date;
+
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
@@ -31,7 +36,7 @@ function App() {
   const [endTime, setEndTime] = useState("");
 
   const loadData = () => {
-    fetch("http://localhost:8080/parking-slots")
+    fetch(`${API_URL}/parking-slots`)
       .then((res) => {
         if (!res.ok) throw new Error("Could not load parking slots");
         return res.json();
@@ -39,7 +44,7 @@ function App() {
       .then((data) => setSlots(data))
       .catch((err) => alert(err.message));
 
-    fetch("http://localhost:8080/bookings")
+    fetch(`${API_URL}/bookings`)
       .then((res) => {
         if (!res.ok) throw new Error("Could not load bookings");
         return res.json();
@@ -58,7 +63,7 @@ function App() {
       password
     };
 
-    fetch("http://localhost:8080/register", {
+    fetch(`${API_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -75,7 +80,7 @@ function App() {
   };
 
   const login = () => {
-    fetch("http://localhost:8080/login", {
+    fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
@@ -120,7 +125,7 @@ function App() {
       payment_status: "Pending"
     };
 
-    fetch("http://localhost:8080/bookings", {
+    fetch(`${API_URL}/bookings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(booking)
@@ -142,7 +147,7 @@ function App() {
   };
 
   const cancelBooking = (id) => {
-    fetch(`http://localhost:8080/bookings/${id}/cancel`, {
+    fetch(`${API_URL}/bookings/${id}/cancel`, {
       method: "PUT"
     })
       .then((res) => {
@@ -157,7 +162,7 @@ function App() {
   };
 
   const makePayment = (id) => {
-    fetch(`http://localhost:8080/bookings/${id}/pay`, {
+    fetch(`${API_URL}/bookings/${id}/pay`, {
       method: "PUT"
     })
       .then((res) => {
@@ -180,46 +185,67 @@ function App() {
           <div className="booking-form">
             <h2>Register</h2>
 
-            <input placeholder="User ID"
+            <input
+              placeholder="User ID"
               value={userId}
-              onChange={(e) => setUserId(e.target.value)} />
+              onChange={(e) => setUserId(e.target.value)}
+            />
 
-            <input placeholder="Full Name"
+            <input
+              placeholder="Full Name"
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)} />
+              onChange={(e) => setFullName(e.target.value)}
+            />
 
-            <input placeholder="Email"
+            <input
+              placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} />
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-            <input placeholder="Phone"
+            <input
+              placeholder="Phone"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)} />
+              onChange={(e) => setPhone(e.target.value)}
+            />
 
-            <input placeholder="Username"
+            <input
+              placeholder="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)} />
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-            <input type="password" placeholder="Password"
+            <input
+              type="password"
+              placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} />
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
             <button onClick={register}>Register</button>
-            <button onClick={() => setPage("login")}>Go to Login</button>
+            <button onClick={() => setPage("login")}>
+              Go to Login
+            </button>
           </div>
         ) : (
           <div className="booking-form">
             <h2>Login</h2>
 
-            <input placeholder="Username"
+            <input
+              placeholder="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)} />
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-            <input type="password" placeholder="Password"
+            <input
+              type="password"
+              placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} />
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
             <button onClick={login}>Login</button>
+
             <button onClick={() => setPage("register")}>
               Create Account
             </button>
@@ -232,13 +258,16 @@ function App() {
   return (
     <div className="app">
       <h1>Smart Parking System</h1>
+
       <p>Welcome, {customer?.full_name}</p>
 
-      <button onClick={() => {
-        setLoggedIn(false);
-        setCustomer(null);
-        setPage("login");
-      }}>
+      <button
+        onClick={() => {
+          setLoggedIn(false);
+          setCustomer(null);
+          setPage("login");
+        }}
+      >
         Logout
       </button>
 
@@ -246,19 +275,26 @@ function App() {
         {slots.map((slot) => (
           <div className="slot-card" key={slot.slot_id}>
             <h2>{slot.slot_number}</h2>
+
             <p>Slot ID: {slot.slot_id}</p>
 
-            <p className={
-              slot.slot_status === "Available" ? "available" : "occupied"
-            }>
+            <p
+              className={
+                slot.slot_status === "Available"
+                  ? "available"
+                  : "occupied"
+              }
+            >
               {slot.slot_status}
             </p>
 
             {slot.slot_status === "Available" && (
-              <button onClick={() => {
-                setSelectedSlot(slot);
-                setBookingDate("");
-              }}>
+              <button
+                onClick={() => {
+                  setSelectedSlot(slot);
+                  setBookingDate("");
+                }}
+              >
                 Book Slot
               </button>
             )}
@@ -277,6 +313,7 @@ function App() {
           />
 
           <label>Select Booking Date:</label>
+
           <input
             type="date"
             value={bookingDate}
@@ -301,7 +338,10 @@ function App() {
           />
 
           <button onClick={bookSlot}>Confirm Booking</button>
-          <button onClick={() => setSelectedSlot(null)}>Close</button>
+
+          <button onClick={() => setSelectedSlot(null)}>
+            Close
+          </button>
         </div>
       )}
 
@@ -311,26 +351,37 @@ function App() {
         {bookings.map((booking) => (
           <div className="slot-card" key={booking.booking_id}>
             <p>Booking ID: {booking.booking_id}</p>
+
             <p>Slot ID: {booking.slot_id}</p>
+
             <p>
-              Date: {formatDate(
+              Date:{" "}
+              {formatDate(
                 typeof booking.booking_date === "string"
                   ? booking.booking_date.substring(0, 10)
                   : ""
               )}
             </p>
+
             <p>Status: {booking.booking_status}</p>
-            <p>Payment: {booking.payment_status || "Pending"}</p>
+
+            <p>
+              Payment: {booking.payment_status || "Pending"}
+            </p>
 
             {booking.booking_status !== "Cancelled" &&
               booking.payment_status !== "Paid" && (
-                <button onClick={() => makePayment(booking.booking_id)}>
+                <button
+                  onClick={() => makePayment(booking.booking_id)}
+                >
                   Pay Now
                 </button>
               )}
 
             {booking.booking_status !== "Cancelled" && (
-              <button onClick={() => cancelBooking(booking.booking_id)}>
+              <button
+                onClick={() => cancelBooking(booking.booking_id)}
+              >
                 Cancel Booking
               </button>
             )}
@@ -342,3 +393,4 @@ function App() {
 }
 
 export default App;
+```
