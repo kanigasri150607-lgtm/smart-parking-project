@@ -1,4 +1,4 @@
-```jsx
+
 import { useState } from "react";
 import "./App.css";
 
@@ -6,11 +6,8 @@ const API_URL = "https://smart-parking-backend-osys.onrender.com";
 
 function formatDate(date) {
   if (!date) return "";
-
   const parts = date.split("-");
-
   if (parts.length !== 3) return date;
-
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
@@ -60,13 +57,13 @@ function App() {
       email,
       phone,
       username,
-      password
+      password,
     };
 
     fetch(`${API_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Registration failed");
@@ -83,7 +80,7 @@ function App() {
     fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Invalid username or password");
@@ -98,13 +95,7 @@ function App() {
   };
 
   const bookSlot = () => {
-    if (
-      !selectedSlot ||
-      !vehicleId ||
-      !bookingDate ||
-      !startTime ||
-      !endTime
-    ) {
+    if (!selectedSlot || !vehicleId || !bookingDate || !startTime || !endTime) {
       alert("Please fill all fields");
       return;
     }
@@ -122,13 +113,13 @@ function App() {
       start_time: startTime,
       end_time: endTime,
       booking_status: "Confirmed",
-      payment_status: "Pending"
+      payment_status: "Pending",
     };
 
     fetch(`${API_URL}/bookings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(booking)
+      body: JSON.stringify(booking),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Booking failed");
@@ -147,9 +138,7 @@ function App() {
   };
 
   const cancelBooking = (id) => {
-    fetch(`${API_URL}/bookings/${id}/cancel`, {
-      method: "PUT"
-    })
+    fetch(`${API_URL}/bookings/${id}/cancel`, { method: "PUT" })
       .then((res) => {
         if (!res.ok) throw new Error("Cancellation failed");
         return res.json();
@@ -162,9 +151,7 @@ function App() {
   };
 
   const makePayment = (id) => {
-    fetch(`${API_URL}/bookings/${id}/pay`, {
-      method: "PUT"
-    })
+    fetch(`${API_URL}/bookings/${id}/pay`, { method: "PUT" })
       .then((res) => {
         if (!res.ok) throw new Error("Payment failed");
         return res.json();
@@ -184,71 +171,23 @@ function App() {
         {page === "register" ? (
           <div className="booking-form">
             <h2>Register</h2>
-
-            <input
-              placeholder="User ID"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-            />
-
-            <input
-              placeholder="Full Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-
-            <input
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <input
-              placeholder="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-
-            <input
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input placeholder="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} />
+            <input placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+            <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
             <button onClick={register}>Register</button>
-            <button onClick={() => setPage("login")}>
-              Go to Login
-            </button>
+            <button onClick={() => setPage("login")}>Go to Login</button>
           </div>
         ) : (
           <div className="booking-form">
             <h2>Login</h2>
-
-            <input
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
+            <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button onClick={login}>Login</button>
-
-            <button onClick={() => setPage("register")}>
-              Create Account
-            </button>
+            <button onClick={() => setPage("register")}>Create Account</button>
           </div>
         )}
       </div>
@@ -258,16 +197,13 @@ function App() {
   return (
     <div className="app">
       <h1>Smart Parking System</h1>
-
       <p>Welcome, {customer?.full_name}</p>
 
-      <button
-        onClick={() => {
-          setLoggedIn(false);
-          setCustomer(null);
-          setPage("login");
-        }}
-      >
+      <button onClick={() => {
+        setLoggedIn(false);
+        setCustomer(null);
+        setPage("login");
+      }}>
         Logout
       </button>
 
@@ -275,26 +211,15 @@ function App() {
         {slots.map((slot) => (
           <div className="slot-card" key={slot.slot_id}>
             <h2>{slot.slot_number}</h2>
-
             <p>Slot ID: {slot.slot_id}</p>
-
-            <p
-              className={
-                slot.slot_status === "Available"
-                  ? "available"
-                  : "occupied"
-              }
-            >
+            <p className={slot.slot_status === "Available" ? "available" : "occupied"}>
               {slot.slot_status}
             </p>
-
             {slot.slot_status === "Available" && (
-              <button
-                onClick={() => {
-                  setSelectedSlot(slot);
-                  setBookingDate("");
-                }}
-              >
+              <button onClick={() => {
+                setSelectedSlot(slot);
+                setBookingDate("");
+              }}>
                 Book Slot
               </button>
             )}
@@ -305,85 +230,39 @@ function App() {
       {selectedSlot && (
         <div className="booking-form">
           <h2>Book Slot {selectedSlot.slot_number}</h2>
-
-          <input
-            placeholder="Vehicle ID"
-            value={vehicleId}
-            onChange={(e) => setVehicleId(e.target.value)}
-          />
-
+          <input placeholder="Vehicle ID" value={vehicleId} onChange={(e) => setVehicleId(e.target.value)} />
           <label>Select Booking Date:</label>
-
-          <input
-            type="date"
-            value={bookingDate}
-            onChange={(e) => setBookingDate(e.target.value)}
-          />
-
-          <p>
-            Selected Date (DD/MM/YYYY):{" "}
-            {bookingDate ? formatDate(bookingDate) : "Not selected"}
-          </p>
-
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-
-          <input
-            type="time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-
+          <input type="date" value={bookingDate} onChange={(e) => setBookingDate(e.target.value)} />
+          <p>Selected Date (DD/MM/YYYY): {bookingDate ? formatDate(bookingDate) : "Not selected"}</p>
+          <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+          <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
           <button onClick={bookSlot}>Confirm Booking</button>
-
-          <button onClick={() => setSelectedSlot(null)}>
-            Close
-          </button>
+          <button onClick={() => setSelectedSlot(null)}>Close</button>
         </div>
       )}
 
       <div className="booking-form">
         <h2>Booking History</h2>
-
         {bookings.map((booking) => (
           <div className="slot-card" key={booking.booking_id}>
             <p>Booking ID: {booking.booking_id}</p>
-
             <p>Slot ID: {booking.slot_id}</p>
-
             <p>
-              Date:{" "}
-              {formatDate(
+              Date: {formatDate(
                 typeof booking.booking_date === "string"
                   ? booking.booking_date.substring(0, 10)
                   : ""
               )}
             </p>
-
             <p>Status: {booking.booking_status}</p>
+            <p>Payment: {booking.payment_status || "Pending"}</p>
 
-            <p>
-              Payment: {booking.payment_status || "Pending"}
-            </p>
-
-            {booking.booking_status !== "Cancelled" &&
-              booking.payment_status !== "Paid" && (
-                <button
-                  onClick={() => makePayment(booking.booking_id)}
-                >
-                  Pay Now
-                </button>
-              )}
+            {booking.booking_status !== "Cancelled" && booking.payment_status !== "Paid" && (
+              <button onClick={() => makePayment(booking.booking_id)}>Pay Now</button>
+            )}
 
             {booking.booking_status !== "Cancelled" && (
-              <button
-                onClick={() => cancelBooking(booking.booking_id)}
-              >
-                Cancel Booking
-              </button>
+              <button onClick={() => cancelBooking(booking.booking_id)}>Cancel Booking</button>
             )}
           </div>
         ))}
@@ -393,4 +272,3 @@ function App() {
 }
 
 export default App;
-```
