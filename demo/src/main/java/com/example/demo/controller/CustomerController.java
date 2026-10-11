@@ -16,7 +16,8 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = {
     "http://localhost:5173",
-    "http://localhost:5174"
+    "http://localhost:5174",
+    "https://smart-parking-frontend-qdhx.onrender.com"
 })
 public class CustomerController {
 
