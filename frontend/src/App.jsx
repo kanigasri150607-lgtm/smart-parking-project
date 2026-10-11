@@ -87,10 +87,11 @@ function App() {
         return res.json();
       })
       .then((data) => {
-        setCustomer(data);
-        setLoggedIn(true);
-        loadData();
-      })
+  setCustomer(data);
+  setLoggedIn(true);
+  setPage("home");
+  loadData();
+})
       .catch((err) => alert(err.message));
   };
 
